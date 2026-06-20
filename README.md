@@ -58,8 +58,6 @@ runnable for free, with no paid API keys required.
 
 ## Screenshots
 
-## Screenshots
-
 ### Landing Page
 ![Landing Page](screenshots/landing.png)
 
