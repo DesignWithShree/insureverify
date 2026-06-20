@@ -1,20 +1,76 @@
-# InsureVerify
+<div align="center">
 
-**Multi-stage AI insurance claim verification & fraud detection platform.**
+# 🛡️ InsureVerify
 
-InsureVerify doesn't just ask "is there damage in this photo?" — it asks
-*"can this evidence be trusted, does the claimant actually possess the
-object, and does the damage match the story they told?"* — the way a real
-human investigator would.
+**An AI insurance investigator, not a damage detector.**
 
-The platform runs every claim through an 11+ stage pipeline (evidence
-forensics → ownership → possession → liveness → sufficiency → vision
-analysis → claim understanding → story consistency → physics validation →
-risk scoring → adaptive verification → a 6-agent investigation team → a
-judge agent) and produces a fully auditable verdict with a chain of
-evidence, not a black-box "fraud / not fraud" label.
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Ollama](https://img.shields.io/badge/Ollama-llava%20%2B%20llama3-000000?logo=ollama&logoColor=white)](https://ollama.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+</div>
 
 ---
+
+## What is InsureVerify?
+
+Most "AI damage detection" demos answer one question: **is there damage in this photo?**
+
+InsureVerify answers the question an actual human claims investigator asks instead:
+
+> **Can this evidence be trusted? Does the claimant really own and possess this
+> object? And does the damage actually match the story they told?**
+
+It does this by running every submitted claim through an **11+ stage
+investigation pipeline** — evidence forensics, ownership verification,
+possession verification, damage liveness, story-consistency cross-checking,
+physics-based fracture validation, fraud-network detection across the
+*entire* claim history — and a **6-agent review team plus a judge agent**
+that combines everything into one auditable verdict, complete with a
+literal chain of evidence explaining every score.
+
+It's built to be a genuine, working system end to end: a FastAPI backend, a
+real React frontend with Firebase authentication, real computer-vision
+forensics (EXIF analysis, Error Level Analysis, perceptual hashing, optical
+flow), real OCR, and optional local LLM/VLM reasoning via Ollama — all
+runnable for free, with no paid API keys required.
+
+## Table of contents
+
+- [Screenshots](#screenshots)
+- [What makes this different](#what-makes-this-different-from-a-typical-damage-detector)
+- [Key features](#key-features)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Setup & Run](#setup--run)
+- [Troubleshooting](#if-verification-feels-slow)
+- [Running without Ollama](#running-without-ollama)
+- [CSV export](#csv-export-outputcsv)
+- [Explainable fraud detection](#explainable-fraud-detection)
+- [Notes on the heuristic detectors](#notes-on-the-heuristic-detectors)
+- [Extending the platform](#extending-the-platform)
+
+---
+
+## Screenshots
+
+## Screenshots
+
+### Landing Page
+![Landing Page](screenshots/landing.png)
+
+### Login Page
+![Login Page](screenshots/login.png)
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Claim Detail
+![Claim Detail](screenshots/claim-detail.png)
 
 ## What makes this different from a typical "damage detector"
 
@@ -25,15 +81,20 @@ evidence, not a black-box "fraud / not fraud" label.
 | Trusts the claim text | The vision model never sees the claim text — it's deliberately kept blind, so Story Consistency is a genuine independent cross-check, not the model parroting back what it was told to find |
 | Looks at one claim in isolation | Cross-references every new claim against the **entire claim history** for duplicate photos and shared device identifiers (fraud-ring detection) |
 
-### Unique features beyond the original spec
+## Key features
 
-These were added specifically to make the platform stronger at *systematically* catching fraud, not just detecting damage:
-
-1. **Fraud Network Engine** — flags when the same evidence photo, or the same serial/VIN/plate, appears across multiple "unrelated" claims or different user accounts.
-2. **Temporal & Geo Consistency Engine** — cross-checks the photo's EXIF capture timestamp against the policy start date (catches "damage existed before coverage began") and EXIF GPS against the claimant's registered region.
-3. **Physics-Based Fracture Validation** — real geometric analysis (Hough line detection + intersection clustering) checks whether a crack's lines actually converge on a plausible impact point and branch the way real fractures do, vs. random/drawn lines.
-4. **Damage Liveness via motion + ORB feature tracking** — distinguishes genuine handheld verification video from a looped static photo or a screen-recording, using real frame-difference and feature-matching analysis, not a guess.
-5. **Auditable chain of evidence** — every verdict includes a literal list of which image, which forensic check, and which piece of reasoning supported the decision.
+- 🔍 **11+ stage verification pipeline** — evidence authenticity, ownership, possession, damage liveness, evidence sufficiency, vision-language analysis, claim understanding, story consistency, physics-based fracture validation, risk scoring, adaptive verification
+- 🕸️ **Fraud Network Engine** — flags reused photos or shared serials/VINs/plates across *different, "unrelated" claims and accounts*, not just within one claim
+- 🛰️ **Temporal & Geo Consistency** — catches damage photos timestamped before the policy started, or GPS-tagged outside the claimant's registered region
+- 🧬 **Physics-based fracture validation** — real Hough-line geometry checks whether a crack actually converges on a plausible impact point and branches the way real fractures do
+- 🎥 **Damage liveness via video** — distinguishes genuine handheld verification footage from a looped photo or screen-recording, using motion analysis and ORB feature tracking
+- 🤖 **Three-layer AI-edit detection** — localized/regional statistics, bidirectional multi-quality Error Level Analysis, and a VLM semantic check, layered together specifically to catch partial AI-inpainted edits on otherwise-real photos
+- 🗣️ **Explainable fraud reasoning** — every flagged image comes with a plain-language breakdown of exactly what was measured and why it matters, not just a score
+- 👥 **6 specialist agents + a judge agent** — Vision, Authenticity, Evidence, Fraud, History, and Ownership experts each weigh in before a final, auditable verdict is rendered
+- 🔐 **Firebase Authentication** — email/password and Google sign-in gating the platform behind a landing page
+- 📊 **CSV export** — automatic per-claim and on-demand batch export to a fixed `output.csv` schema
+- 🖥️ **Polished, animated frontend** — React + Tailwind + Framer Motion, with scroll-triggered landing-page animations and a live verification progress timer
+- 🆓 **Runs entirely free** — classical CV/OCR fallbacks work with zero API keys; optional local Ollama (`llava` + `llama3`) for LLM/VLM reasoning, no paid services required
 
 ---
 
@@ -171,6 +232,28 @@ Open **http://localhost:5173** in your browser.
 1. You'll land on the **landing page** first — scroll through it, then click "Get started".
 2. If Firebase is configured, you'll hit a **sign-in screen** — create an account with email/password, or continue with Google.
 3. Click **"New claim"**.
+
+### Taking screenshots for the README
+
+If you want the screenshots in this README to render (see the gallery near
+the top), capture these 6 and save them into `screenshots/` with these
+exact filenames:
+
+| Filename | What to capture |
+|---|---|
+| `screenshots/landing.png` | The hero section of the landing page (first thing you see) |
+| `screenshots/login.png` | The sign-in screen |
+| `screenshots/dashboard.png` | The case board with a few claims filed |
+| `screenshots/new-claim.png` | The "File a claim" form, or the live verification progress screen |
+| `screenshots/claim-detail.png` | A completed claim's verdict page (trust score + chain of evidence) |
+| `screenshots/forensic-detail.png` | The per-image forensic drill-down modal, ideally on an image that raised a flag |
+
+PNG or JPG both work. After adding them:
+```bash
+git add screenshots/
+git commit -m "Add screenshots"
+git push
+```
 2. Pick an object type (laptop/car/package), describe what happened.
 3. You'll get a unique challenge code (e.g. `CLAIM-58291`) — in a real
    scenario you'd write this on paper next to the object before
@@ -239,14 +322,6 @@ direct passthrough; `evidence_standard_met`, `supporting_image_ids`, and
 the same thresholds the pipeline already uses elsewhere, not new judgement
 logic).
 
-## Extending the platform
-
-- **Swap the JSON claims store for a real DB**: only `backend/app/db/claims_store.py` needs to change — every stage depends on the Pydantic schemas in `core/schemas.py`, not on storage directly.
-- **Add a real fine-tuned damage classifier**: drop a `timm`-based EfficientNet model (same pattern as the AgriAI project) into `app/stages/stage5_vision.py`'s fallback path for higher-precision severity scoring without Ollama.
-- **Add more object types**: extend `app/core/taxonomy.py` with new parts/issues/evidence requirements — every stage reads from this file, so no other code changes are needed.
-- **Real geofencing**: replace the coarse bounding-box lookup in `app/stages/stageX_temporal_geo.py` with a real reverse-geocoding API.
-- **Lock down the backend API with the same Firebase auth**: currently auth only gates the frontend UI — the FastAPI backend accepts any request. To actually enforce it server-side, verify the Firebase ID token (sent via an `Authorization: Bearer <token>` header from the frontend) using the `firebase-admin` Python SDK in a FastAPI dependency, and require it on the claim-mutating endpoints.
-
 ## Explainable fraud detection
 
 Every per-image authenticity score is backed by a structured explanation,
@@ -304,3 +379,36 @@ fraud-detection stakes, supplement with a dedicated trained AI-image/deepfake
 detector (commercial API or open model) as a fourth layer; the architecture
 is built so you can drop one in alongside the existing three without
 touching the rest of the pipeline.
+---
+
+## Extending the platform
+
+- **Swap the JSON claims store for a real DB**: only `backend/app/db/claims_store.py` needs to change — every stage depends on the Pydantic schemas in `core/schemas.py`, not on storage directly.
+- **Add a real fine-tuned damage classifier**: drop a `timm`-based EfficientNet model (same pattern as the AgriAI project) into `app/stages/stage5_vision.py`'s fallback path for higher-precision severity scoring without Ollama.
+- **Add more object types**: extend `app/core/taxonomy.py` with new parts/issues/evidence requirements — every stage reads from this file, so no other code changes are needed.
+- **Real geofencing**: replace the coarse bounding-box lookup in `app/stages/stageX_temporal_geo.py` with a real reverse-geocoding API.
+- **Lock down the backend API with the same Firebase auth**: currently auth only gates the frontend UI — the FastAPI backend accepts any request. To actually enforce it server-side, verify the Firebase ID token (sent via an `Authorization: Bearer <token>` header from the frontend) using the `firebase-admin` Python SDK in a FastAPI dependency, and require it on the claim-mutating endpoints.
+
+## Contributing
+
+This started as a learning/demo project, but issues and pull requests are
+welcome — especially around:
+- Swapping the heuristic AI-edit detectors for a trained model
+- Adding a real database backend (see "Extending the platform" above)
+- Hardening the API with real Firebase token verification
+- New object types / claim categories in `app/core/taxonomy.py`
+
+If you're picking this up, the codebase is organized so each pipeline stage
+is one file under `backend/app/stages/`, independently testable — that's
+the easiest place to start.
+
+## License
+
+MIT — see [LICENSE](LICENSE). Use it, fork it, build on it.
+
+## Acknowledgments
+
+- [Ollama](https://ollama.com/) for making local LLM/VLM inference trivial to set up
+- [EasyOCR](https://github.com/JaidedAI/EasyOCR) for OCR
+- [OpenCV](https://opencv.org/) for the classical computer-vision forensics
+- [Firebase](https://firebase.google.com/) for authentication
