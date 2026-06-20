@@ -1,0 +1,23 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Data (keep folder structure, ignore generated content)
+backend/data/claims_db/*.json
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+
+# Env
+.env
+backend/.env
+frontend/.env
+
+# OS
+.DS_Store
+Thumbs.db
